@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "626966139898",
+    "firebase_url": "https://shayriya-c3cf6.firebaseio.com",
+    "project_id": "shayriya-c3cf6",
+    "storage_bucket": "shayriya-c3cf6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626966139898:android:eca696c27a63be4e0d8a43",
+        "android_client_info": {
+          "package_name": "com.kunpitech.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBV9Yk2b0-YUTSl21E7YMaL_wd-7LmgDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626966139898:android:f191365a457b9e180d8a43",
+        "android_client_info": {
+          "package_name": "com.kunpitech.shayari"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBV9Yk2b0-YUTSl21E7YMaL_wd-7LmgDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:626966139898:android:7a7ced0475bfdb910d8a43",
+        "android_client_info": {
+          "package_name": "com.kunpitech.shayariwala"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBV9Yk2b0-YUTSl21E7YMaL_wd-7LmgDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

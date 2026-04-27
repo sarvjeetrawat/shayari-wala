@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ShayariWala</string>
+    <string name="banner_sample_ad">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_ad">ca-app-pub-1843908357541717/4846314131</string>
+    <string name="interstitial_ad">ca-app-pub-1843908357541717/5893293182</string>
+    <string name="interstitial_sample_ad">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="favourite">Favourite</string>
+</resources>
