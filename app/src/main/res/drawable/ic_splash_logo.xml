@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer glow circle -->
+    <path
+        android:fillColor="#1FC9A96E"
+        android:pathData="M54,54m-48,0a48,48 0,1 1,96 0a48,48 0,1 1,-96 0" />
+
+    <!-- Inner circle -->
+    <path
+        android:fillColor="#2AC9A96E"
+        android:pathData="M54,54m-36,0a36,36 0,1 1,72 0a36,36 0,1 1,-72 0" />
+
+    <!-- ✦ Star shape -->
+    <path
+        android:fillColor="#C9A96E"
+        android:pathData="
+        M54,22
+        L57.5,46.5
+        L82,50
+        L57.5,53.5
+        L54,78
+        L50.5,53.5
+        L26,50
+        L50.5,46.5
+        Z" />
+
+    <!-- Small decorative dots -->
+    <path
+        android:fillColor="#C9A96E"
+        android:pathData="M54,18 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0" />
+    <path
+        android:fillColor="#C9A96E"
+        android:pathData="M54,82 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0" />
+    <path
+        android:fillColor="#C9A96E"
+        android:pathData="M18,50 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0" />
+    <path
+        android:fillColor="#C9A96E"
+        android:pathData="M82,50 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0" />
+
+</vector>

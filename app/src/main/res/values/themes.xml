@@ -2,7 +2,23 @@
 <resources>
 
     <style name="Theme.ShayariWala" parent="android:Theme.Material.Light.NoActionBar" >
-    <item name="android:windowBackground">@android:color/black</item>
+        <item name="android:windowBackground">@color/splash_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <!-- Splash screen theme — applied before setContent -->
+    <style name="Theme.ShayariWala.Splash" parent="Theme.SplashScreen">
+        <!-- Background color of splash -->
+        <item name="windowSplashScreenBackground">@color/splash_bg</item>
+        <!-- Icon shown in center -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <!-- Duration of icon animation -->
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <!-- Color of bottom bar during splash -->
+        <item name="windowSplashScreenIconBackgroundColor">@color/splash_bg</item>
+        <!-- Theme to switch to after splash -->
+        <item name="postSplashScreenTheme">@style/Theme.ShayariWala</item>
     </style>
 
 </resources>

@@ -16,15 +16,25 @@ class ShayariRepository {
     // Real-time feed — all or filtered by category
     fun getShayari(category: String = "all"): Flow<List<Shayari>> = callbackFlow {
         val query = if (category == "all") {
-            collection.orderBy("createdAt", Query.Direction.DESCENDING)
+            db.collection("shayari")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
         } else {
-            collection
+            db.collection("shayari")
                 .whereEqualTo("category", category)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
         }
 
         val listener = query.addSnapshotListener { snapshot, error ->
-            if (error != null) { close(error); return@addSnapshotListener }
+            if (error != null) {
+                // If index not ready yet — send empty list instead of crashing
+                if (error.message?.contains("FAILED_PRECONDITION") == true ||
+                    error.message?.contains("requires an index") == true) {
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
+                close(error)
+                return@addSnapshotListener
+            }
             val list = snapshot?.documents?.mapNotNull { doc ->
                 doc.toObject(Shayari::class.java)?.copy(id = doc.id)
             } ?: emptyList()
@@ -34,7 +44,6 @@ class ShayariRepository {
     }
 
     // Toggle like (simple increment — replace with transaction for production)
-    // Replace the toggleLike function with this
     suspend fun toggleLike(shayariId: String, isLiked: Boolean) {
         try {
             val ref = db.collection("shayari").document(shayariId)

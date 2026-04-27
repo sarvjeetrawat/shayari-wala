@@ -72,7 +72,6 @@ fun MoodFeedScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .statusBarsPadding()
                 .navigationBarsPadding(),
         ) {
 

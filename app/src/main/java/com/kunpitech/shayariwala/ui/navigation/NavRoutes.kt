@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 sealed class Screen(val route: String) {
 
     // ── Bottom nav screens ────────────────────────────
+    data object Splash   : Screen("splash")
     data object Home     : Screen("home")
     data object Explore  : Screen("explore")
     data object Saved : Screen("saved")

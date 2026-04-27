@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kunpitech.shayariwala.ads.BannerAdView
 import com.kunpitech.shayariwala.ui.components.ShayariCard
 import com.kunpitech.shayariwala.ui.theme.Bg600
 import com.kunpitech.shayariwala.ui.theme.Bg900
@@ -106,11 +107,11 @@ fun HomeScreen(
 
                     else -> {
                         LazyColumn(
-                            contentPadding     = PaddingValues(
+                            contentPadding      = PaddingValues(
                                 start  = 16.dp,
                                 end    = 16.dp,
                                 top    = 8.dp,
-                                bottom = 100.dp        // space for bottom nav
+                                bottom = 100.dp,
                             ),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
@@ -128,13 +129,25 @@ fun HomeScreen(
                                                 tween(400, delayMillis = index * 50)
                                             ) { it / 3 },
                                 ) {
-                                    ShayariCard(
-                                        shayari  = shayari,
-                                        isLiked  = shayari.id in uiState.likedIds,  // ← must be this
-                                        onLike   = { viewModel.toggleLike(shayari.id) },
-                                        onShare  = { },
-                                        onClick  = { onShayariClick(shayari.id) },
-                                    )
+                                    Column {
+                                        ShayariCard(
+                                            shayari  = shayari,
+                                            isLiked  = shayari.id in uiState.likedIds,
+                                            onLike   = { viewModel.toggleLike(shayari.id) },
+                                            onShare  = { },
+                                            onClick  = { onShayariClick(shayari.id) },
+                                        )
+
+                                        // ── Show banner ad after every 5th card ───
+                                        if ((index + 1) % 5 == 0) {
+                                            Spacer(Modifier.height(8.dp))
+                                            BannerAdView(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(12.dp))
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }

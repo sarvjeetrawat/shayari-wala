@@ -1,5 +1,6 @@
 package com.kunpitech.shayariwala.ui.navigation
 
+import android.app.Activity
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,9 +15,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -27,12 +30,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.kunpitech.shayariwala.ads.AdManager
 import com.kunpitech.shayariwala.ui.detail.DetailScreen
 import com.kunpitech.shayariwala.ui.explore.ExploreScreen
 import com.kunpitech.shayariwala.ui.home.HomeScreen
 import com.kunpitech.shayariwala.ui.moodfeed.MoodFeedScreen
 import com.kunpitech.shayariwala.ui.profile.ProfileScreen
 import com.kunpitech.shayariwala.ui.saved.SavedScreen
+import com.kunpitech.shayariwala.ui.splash.SplashScreen
 import com.kunpitech.shayariwala.ui.write.WriteShayariScreen
 import com.kunpitech.shayariwala.ui.theme.Gold400
 import com.kunpitech.shayariwala.ui.theme.TextDisabled
@@ -73,6 +78,24 @@ fun ShayariNavGraph(
             startDestination = Screen.Home.route,
             modifier         = Modifier.padding(innerPadding),
         ) {
+
+            // ── Splash ────────────────────────────────────
+            composable(
+                route           = Screen.Splash.route,
+                enterTransition = { fadeIn(tween(300)) },
+                exitTransition  = { fadeOut(tween(500)) },
+            ) {
+                SplashScreen(
+                    onReady = {
+                        navController.navigate(Screen.Home.route) {
+                            // Remove splash from back stack
+                            popUpTo(Screen.Splash.route) {
+                                inclusive = true
+                            }
+                        }
+                    }
+                )
+            }
 
             // ── Home ──────────────────────────────────────────────
             composable(
@@ -170,6 +193,14 @@ fun ShayariNavGraph(
                 val shayariId = backStackEntry.arguments
                     ?.getString("shayariId")
                     ?: return@composable
+
+                val context  = LocalContext.current
+                val activity = context as? Activity
+
+                // Show interstitial every 4th shayari open
+                LaunchedEffect(shayariId) {
+                    activity?.let { AdManager.onShayariOpened(it) }
+                }
 
                 DetailScreen(
                     shayariId      = shayariId,

@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kunpitech.shayariwala.ads.BannerAdView
 import com.kunpitech.shayariwala.data.model.Shayari
 import com.kunpitech.shayariwala.ui.components.categoryColor
 import com.kunpitech.shayariwala.ui.components.categoryDimColor
@@ -250,6 +251,16 @@ fun DetailScreen(
                                 )
                             }
                         }
+                    }
+
+                    item {
+                        Spacer(Modifier.height(16.dp))
+                        BannerAdView(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                        )
+                        Spacer(Modifier.height(16.dp))
                     }
                 }
             }
