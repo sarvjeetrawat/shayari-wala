@@ -50,6 +50,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import com.google.firebase.firestore.AggregateSource
+import android.content.Context
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kunpitech.shayariwala.data.model.Shayari
@@ -63,6 +72,8 @@ import com.kunpitech.shayariwala.ui.theme.PoetNameStyle
 import com.kunpitech.shayariwala.ui.theme.TextDisabled
 import com.kunpitech.shayariwala.ui.theme.TextMuted
 import com.kunpitech.shayariwala.ui.theme.TextPrimary
+import com.kunpitech.shayariwala.ui.theme.ErrorRed
+import com.kunpitech.shayariwala.ui.theme.SuccessGreen
 import com.kunpitech.shayariwala.ui.theme.shayariColors
 
 @Composable
@@ -72,7 +83,10 @@ fun ProfileScreen(
     viewModel       : ProfileViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val ext = MaterialTheme.shayariColors
+    val context = LocalContext.current
+    val isDebug = remember(context) {
+        (context.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
+    }
 
     Scaffold(containerColor = MaterialTheme.colorScheme.background) { innerPadding ->
 
@@ -87,9 +101,8 @@ fun ProfileScreen(
         LazyColumn(
             modifier       = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .navigationBarsPadding(),
-            contentPadding = PaddingValues(bottom = 40.dp),
+                .padding(innerPadding),
+            contentPadding = PaddingValues(bottom = 16.dp),
         ) {
 
             // ── Hero section ──────────────────────────
@@ -165,6 +178,14 @@ fun ProfileScreen(
                             }
                         }
                     }
+                }
+            }
+
+            // ── Developer Admin Section ────────────────
+            if (isDebug) {
+                item {
+                    Spacer(Modifier.height(24.dp))
+                    DeveloperSection(context = context)
                 }
             }
         }
@@ -495,4 +516,238 @@ private fun formatCount(n: Int): String = when {
     n >= 1_000_000 -> "${"%.1f".format(n / 1_000_000f)}M"
     n >= 1_000     -> "${"%.1f".format(n / 1_000f)}k"
     else           -> "$n"
+}
+
+@Composable
+private fun DeveloperSection(context: Context) {
+    val scope = rememberCoroutineScope()
+    var statusText by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HorizontalDivider(color = Color(0xFF1E1E2A), thickness = 0.5.dp)
+        Spacer(Modifier.height(16.dp))
+        Text(
+            text = "Developer Admin Actions",
+            style = MaterialTheme.typography.labelLarge.copy(
+                color = TextDisabled,
+                fontFamily = DmSans,
+                fontSize = 11.sp,
+                letterSpacing = 1.sp
+            )
+        )
+        Spacer(Modifier.height(8.dp))
+        
+        // Button 1: Upload Shayari
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFF141418))
+                .border(0.5.dp, Color(0xFF2A2A3A), RoundedCornerShape(12.dp))
+                .clickable(enabled = !isLoading) {
+                    isLoading = true
+                    statusText = "Uploading Shayari..."
+                    scope.launch {
+                        try {
+                            val jsonString = context.assets.open("bulk_shayari.json")
+                                .bufferedReader()
+                                .use { it.readText() }
+                            val jsonArray = org.json.JSONArray(jsonString)
+                            val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                            val batch = db.batch()
+                            
+                            for (i in 0 until jsonArray.length()) {
+                                val obj = jsonArray.getJSONObject(i)
+                                val docRef = db.collection("shayari").document()
+                                batch.set(
+                                    docRef,
+                                    mapOf(
+                                        "hindiText" to obj.optString("hindiText", ""),
+                                        "urduText" to obj.optString("urduText", ""),
+                                        "poet" to obj.optString("poet", "Unknown"),
+                                        "category" to obj.optString("category", "all"),
+                                        "isTrending" to obj.optBoolean("isTrending", false),
+                                        "likes" to 0,
+                                        "comments" to 0,
+                                        "createdAt" to System.currentTimeMillis()
+                                    )
+                                )
+                            }
+                            
+                            batch.commit().await()
+                            statusText = "${jsonArray.length()} Shayari successfully uploaded! 🎉"
+                        } catch (e: Exception) {
+                            statusText = "Upload failed: ${e.message}"
+                        } finally {
+                            isLoading = false
+                        }
+                    }
+                }
+                .padding(vertical = 12.dp, horizontal = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (isLoading) "Uploading..." else "Bulk Upload Shayari (bulk_shayari.json)",
+                color = if (isLoading) TextDisabled else Gold400,
+                style = MaterialTheme.typography.labelLarge.copy(fontFamily = DmSans)
+            )
+        }
+        
+        Spacer(Modifier.height(10.dp))
+        
+        // Button 2: Upload Poets & Compute counts
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFF141418))
+                .border(0.5.dp, Color(0xFF2A2A3A), RoundedCornerShape(12.dp))
+                .clickable(enabled = !isLoading) {
+                    isLoading = true
+                    statusText = "Uploading Poets..."
+                    scope.launch {
+                        try {
+                            // 1. Read bulk_poets.json
+                            val poetsString = context.assets.open("bulk_poets.json")
+                                .bufferedReader()
+                                .use { it.readText() }
+                            val poetsArray = org.json.JSONArray(poetsString)
+                            
+                            val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                            val batch = db.batch()
+                            
+                            for (i in 0 until poetsArray.length()) {
+                                val obj = poetsArray.getJSONObject(i)
+                                val name = obj.optString("name", "")
+                                if (name.isEmpty()) continue
+                                
+                                // Query the actual count of shayari for this poet in Firestore
+                                val countSnapshot = db.collection("shayari")
+                                    .whereEqualTo("poet", name)
+                                    .count()
+                                    .get(AggregateSource.SERVER)
+                                    .await()
+                                val count = countSnapshot.count.toInt()
+                                
+                                val docRef = db.collection("poets").document(name)
+                                batch.set(
+                                    docRef,
+                                    mapOf(
+                                        "name" to name,
+                                        "urduName" to obj.optString("urduName", ""),
+                                        "bio" to obj.optString("bio", ""),
+                                        "category" to obj.optString("category", ""),
+                                        "shayariCount" to count
+                                    )
+                                )
+                            }
+                            
+                            batch.commit().await()
+                            statusText = "${poetsArray.length()} Poets successfully uploaded with dynamic counts! 🎉"
+                        } catch (e: Exception) {
+                            statusText = "Upload failed: ${e.message}"
+                        } finally {
+                            isLoading = false
+                        }
+                    }
+                }
+                .padding(vertical = 12.dp, horizontal = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (isLoading) "Uploading..." else "Bulk Upload Poets (bulk_poets.json)",
+                color = if (isLoading) TextDisabled else Gold400,
+                style = MaterialTheme.typography.labelLarge.copy(fontFamily = DmSans)
+            )
+        }
+        
+        Spacer(Modifier.height(10.dp))
+        
+        // Button 3: Check Database Stats
+        var statsText by remember { mutableStateOf("") }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFF141418))
+                .border(0.5.dp, Color(0xFF2A2A3A), RoundedCornerShape(12.dp))
+                .clickable(enabled = !isLoading) {
+                    isLoading = true
+                    statsText = "Loading stats..."
+                    scope.launch {
+                        try {
+                            val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                            
+                            // 1. Get total shayari count
+                            val totalSnapshot = db.collection("shayari").count().get(AggregateSource.SERVER).await()
+                            val totalShayari = totalSnapshot.count
+                            
+                            // 2. Get count for each poet
+                            val poetsString = context.assets.open("bulk_poets.json")
+                                .bufferedReader()
+                                .use { it.readText() }
+                            val poetsArray = org.json.JSONArray(poetsString)
+                            val sb = StringBuilder()
+                            sb.append("Total Shayari in DB: $totalShayari\n\nPoet counts in DB:\n")
+                            
+                            for (i in 0 until poetsArray.length()) {
+                                val name = poetsArray.getJSONObject(i).optString("name", "")
+                                if (name.isEmpty()) continue
+                                val countSnapshot = db.collection("shayari")
+                                    .whereEqualTo("poet", name)
+                                    .count()
+                                    .get(AggregateSource.SERVER)
+                                    .await()
+                                sb.append("• $name: ${countSnapshot.count}\n")
+                            }
+                            statsText = sb.toString()
+                        } catch (e: Exception) {
+                            statsText = "Failed to load stats: ${e.message}"
+                        } finally {
+                            isLoading = false
+                        }
+                    }
+                }
+                .padding(vertical = 12.dp, horizontal = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = if (isLoading) "Loading..." else "Check Database Stats",
+                color = if (isLoading) TextDisabled else Gold400,
+                style = MaterialTheme.typography.labelLarge.copy(fontFamily = DmSans)
+            )
+        }
+        
+        if (statusText.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = statusText,
+                color = if (statusText.startsWith("Upload failed")) ErrorRed else SuccessGreen,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = DmSans,
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+        
+        if (statsText.isNotEmpty()) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = statsText,
+                color = TextPrimary,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    fontFamily = DmSans,
+                    textAlign = TextAlign.Start
+                ),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+        }
+    }
 }

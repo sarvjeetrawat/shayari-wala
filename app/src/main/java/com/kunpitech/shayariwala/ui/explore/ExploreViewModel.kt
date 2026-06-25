@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -128,14 +129,22 @@ class ExploreViewModel(
     }
 
     private fun loadPoets() {
-        poetRepo.getAllPoets()
-            .onEach { list ->
-                _uiState.value = _uiState.value.copy(poets = list, isPoetsLoading = false)
-            }
-            .catch { e ->
-                _uiState.value = _uiState.value.copy(isPoetsLoading = false, error = e.message)
-            }
-            .launchIn(viewModelScope)
+        combine(
+            poetRepo.getAllPoets(),
+            shayariRepo.getShayari("all")
+        ) { poetsList, shayariList ->
+            val countMap = shayariList.groupBy { it.poet }.mapValues { it.value.size }
+            poetsList.map { poet ->
+                poet.copy(shayariCount = countMap[poet.name] ?: 0)
+            }.sortedByDescending { it.shayariCount }
+        }
+        .onEach { updatedPoets ->
+            _uiState.value = _uiState.value.copy(poets = updatedPoets, isPoetsLoading = false)
+        }
+        .catch { e ->
+            _uiState.value = _uiState.value.copy(isPoetsLoading = false, error = e.message)
+        }
+        .launchIn(viewModelScope)
     }
 
     private fun observeSearch() {

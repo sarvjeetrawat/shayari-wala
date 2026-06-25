@@ -43,6 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
+import com.kunpitech.shayariwala.utils.ShareUtils
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -76,8 +78,7 @@ fun SavedScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
-                .navigationBarsPadding(),
+                .padding(innerPadding),
         ) {
 
             // ── Header ────────────────────────────────────
@@ -216,6 +217,7 @@ private fun SavedShayariCard(
     onClick  : () -> Unit,
     onUnsave : () -> Unit,
 ) {
+    val context = LocalContext.current
     val accentColor = categoryColor(shayari.category)
 
     Box(
@@ -374,6 +376,7 @@ private fun SavedShayariCard(
                         .clip(RoundedCornerShape(20.dp))
                         .background(Color(0xFF141418))
                         .border(0.5.dp, Color(0xFF2A2A3A), RoundedCornerShape(20.dp))
+                        .clickable { ShareUtils.shareShayari(context, shayari) }
                         .padding(horizontal = 14.dp, vertical = 5.dp),
                     contentAlignment = Alignment.Center,
                 ) {

@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kunpitech.shayariwala.ui.components.ShayariCard
@@ -50,6 +51,7 @@ import com.kunpitech.shayariwala.ui.theme.Gold400
 import com.kunpitech.shayariwala.ui.theme.TextDisabled
 import com.kunpitech.shayariwala.ui.theme.TextMuted
 import com.kunpitech.shayariwala.ui.theme.shayariColors
+import com.kunpitech.shayariwala.utils.ShareUtils
 
 @Composable
 fun MoodFeedScreen(
@@ -62,6 +64,7 @@ fun MoodFeedScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val ext         = MaterialTheme.shayariColors
+    val context     = LocalContext.current
     val accentColor = categoryColor(category)
     val dimColor    = categoryDimColor(category)
     val label       = categoryLabel(category)
@@ -151,7 +154,7 @@ fun MoodFeedScreen(
                                         shayari  = shayari,
                                         isLiked  = shayari.id in uiState.likedIds,
                                         onLike   = { viewModel.toggleLike(shayari.id) },
-                                        onShare  = { },
+                                        onShare  = { ShareUtils.shareShayari(context, shayari) },
                                         onClick  = { onShayariClick(shayari.id) },
                                     )
                                 }

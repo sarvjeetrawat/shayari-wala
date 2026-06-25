@@ -40,6 +40,12 @@ val JudaiPurpleDim = Color(0x1F9B72CF)
 val WafaTeal       = Color(0xFF4AC9B8)
 val WafaTealDim    = Color(0x1F4AC9B8)
 
+val HoslaTeal       = Color(0xFF2E4593)
+val HoslaTealDim    = Color(0x1F2E4593)
+
+val InspirationTeal       = Color(0xFF670A53)
+val InspirationTealDim    = Color(0x1F670A53)
+
 // ── Semantic ──────────────────────────────────────────────
 val ErrorRed       = Color(0xFFCF6679)
 val SuccessGreen   = Color(0xFF4CAF50)

@@ -20,7 +20,7 @@ data class WriteUiState(
     val error           : String? = null,
 )
 
-val writeCategories = listOf("ishq", "dard", "zindagi", "khushi", "judai", "wafa")
+val writeCategories = listOf("ishq", "dard", "zindagi", "khushi", "judai", "wafa", "hosla", "inspiration")
 
 class WriteViewModel : ViewModel() {
 

@@ -16,8 +16,8 @@ roomRuntime = "2.8.0"
 lifecycleRuntimeKtxVersion = "2.9.3"
 navigationComposeAndroid = "2.9.4"
 googleFonts = "1.7.8"
-firebaseBom        = "33.13.0"
-navigationCompose  = "2.8.9"
+firebaseBom = "33.13.0"
+navigationCompose = "2.8.9"
 lifecycleViewmodel = "2.9.0"
 accompanist = "0.36.0"
 splashScreen = "1.0.1"
@@ -49,12 +49,12 @@ androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
 androidx-compose-ui-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "googleFonts" }
 
-firebase-bom             = { group = "com.google.firebase", name = "firebase-bom",                    version.ref = "firebaseBom" }
-firebase-firestore       = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
-firebase-auth            = { group = "com.google.firebase", name = "firebase-auth-ktx" }
-navigation-compose       = { group = "androidx.navigation", name = "navigation-compose",              version.ref = "navigationCompose" }
-lifecycle-viewmodel      = { group = "androidx.lifecycle",  name = "lifecycle-viewmodel-compose",     version.ref = "lifecycleViewmodel" }
-lifecycle-runtime        = { group = "androidx.lifecycle",  name = "lifecycle-runtime-compose",       version.ref = "lifecycleViewmodel" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodel" }
+lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleViewmodel" }
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 androidx-splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
 

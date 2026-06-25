@@ -58,6 +58,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import com.kunpitech.shayariwala.utils.ShareUtils
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -148,7 +149,7 @@ fun DetailScreen(
                         DetailTopBar(
                             onBack = onBack,
                             onShare = {
-                                shareShayari(context, shayari)
+                                ShareUtils.shareShayari(context, shayari)
                             },
                         )
                     }
@@ -182,12 +183,12 @@ fun DetailScreen(
                             ActionButtonsRow(
                                 isLiked   = uiState.isLiked,
                                 isSaved   = uiState.isSaved,
-                                likeCount = shayari.likes + if (uiState.isLiked) 1 else 0,
+                                likeCount = shayari.likes,
                                 onLike    = { viewModel.toggleLike() },
                                 onSave    = { viewModel.toggleSave() },
-                                onShare   = { shareShayari(context, shayari) },
+                                onShare   = { ShareUtils.shareShayari(context, shayari) },
                                 onCopy    = {
-                                    copyToClipboard(context, shayari.hindiText)
+                                    ShareUtils.copyToClipboard(context, shayari.hindiText)
                                     scope.launch {
                                         snackbarState.showSnackbar("Shayari copy ho gayi ✦")
                                     }
@@ -673,29 +674,4 @@ private fun formatCount(n: Int): String = when {
     n >= 1_000_000 -> "${"%.1f".format(n / 1_000_000f)}M"
     n >= 1_000     -> "${"%.1f".format(n / 1_000f)}k"
     else           -> "$n"
-}
-
-private fun copyToClipboard(context: Context, text: String) {
-    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    clipboard.setPrimaryClip(ClipData.newPlainText("Shayari", text))
-}
-
-private fun shareShayari(context: Context, shayari: Shayari) {
-    val shareText = buildString {
-        appendLine(shayari.hindiText)
-        if (shayari.urduText.isNotBlank()) {
-            appendLine()
-            appendLine(shayari.urduText)
-        }
-        appendLine()
-        append("— ${shayari.poet}")
-        appendLine()
-        appendLine()
-        append("Shayari Wala app se")
-    }
-    val intent = Intent(Intent.ACTION_SEND).apply {
-        type    = "text/plain"
-        putExtra(Intent.EXTRA_TEXT, shareText)
-    }
-    context.startActivity(Intent.createChooser(intent, "Shayari share karo"))
 }

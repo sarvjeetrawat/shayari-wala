@@ -40,6 +40,10 @@ data class ShayariExtendedColors(
     val judaiDim         : Color,
     val wafa             : Color,
     val wafaDim          : Color,
+    val hosla            : Color,
+    val hoslaDim         : Color,
+    val inspiration      : Color,
+    val inspirationDim   : Color,
 )
 
 val LocalShayariColors = staticCompositionLocalOf {
@@ -67,6 +71,10 @@ val LocalShayariColors = staticCompositionLocalOf {
         judaiDim         = Color.Unspecified,
         wafa             = Color.Unspecified,
         wafaDim          = Color.Unspecified,
+        hosla            = Color.Unspecified,
+        hoslaDim         = Color.Unspecified,
+        inspiration      = Color.Unspecified,
+        inspirationDim   = Color.Unspecified,
     )
 }
 
@@ -157,6 +165,10 @@ private val DarkExtended = ShayariExtendedColors(
     judaiDim         = JudaiPurpleDim,
     wafa             = WafaTeal,
     wafaDim          = WafaTealDim,
+    hosla            = HoslaTeal,
+    hoslaDim         = HoslaTealDim,
+    inspiration      = InspirationTeal,
+    inspirationDim   = InspirationTealDim,
 )
 
 // ── Extended light colours instance ──────────────────────
@@ -184,6 +196,10 @@ private val LightExtended = ShayariExtendedColors(
     judaiDim         = Color(0x1F9B72CF),
     wafa             = WafaTeal,
     wafaDim          = Color(0x1F4AC9B8),
+    hosla            = HoslaTeal,
+    hoslaDim         = Color(0x1F2E4593),
+    inspiration      = InspirationTeal,
+    inspirationDim   = Color(0x1F670A53),
 )
 
 // ── Public accessor ───────────────────────────────────────

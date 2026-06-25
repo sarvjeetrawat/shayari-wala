@@ -60,6 +60,8 @@ fun categoryColor(category: String): Color {
         "khushi"  -> ext.khushi
         "judai"   -> ext.judai
         "wafa"    -> ext.wafa
+        "hosla"    -> ext.hosla
+        "inspiration"    -> ext.inspiration
         else      -> Gold400
     }
 }
@@ -74,6 +76,8 @@ fun categoryDimColor(category: String): Color {
         "khushi"  -> ext.khushiDim
         "judai"   -> ext.judaiDim
         "wafa"    -> ext.wafaDim
+        "hosla"    -> ext.hoslaDim
+        "inspiration"    -> ext.inspirationDim
         else      -> ext.accentGoldSubtle
     }
 }
@@ -85,6 +89,8 @@ fun categoryLabel(category: String): String = when (category.lowercase()) {
     "khushi"  -> "☀ Khushi"
     "judai"   -> "☽ Judai"
     "wafa"    -> "◈ Wafa"
+    "hosla"      -> "🛡 Hosla"
+    "inspiration" -> "✨ Inspiration"
     else      -> category.replaceFirstChar { it.uppercaseChar() }
 }
 
@@ -216,9 +222,7 @@ fun ShayariCard(
                             )
                             Spacer(Modifier.width(4.dp))
                             Text(
-                                text  = formatCount(
-                                    if (isLiked) shayari.likes + 1 else shayari.likes
-                                ),
+                                text  = formatCount(shayari.likes),
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     color      = likeColor,
                                     fontFamily = DmSans,

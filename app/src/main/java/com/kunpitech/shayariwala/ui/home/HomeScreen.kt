@@ -29,7 +29,6 @@ import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -39,22 +38,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kunpitech.shayariwala.ads.BannerAdView
+import androidx.compose.ui.platform.LocalContext
 import com.kunpitech.shayariwala.ui.components.ShayariCard
 import com.kunpitech.shayariwala.ui.theme.Bg600
 import com.kunpitech.shayariwala.ui.theme.Bg900
 import com.kunpitech.shayariwala.ui.theme.Border100
 import com.kunpitech.shayariwala.ui.theme.DmSans
 import com.kunpitech.shayariwala.ui.theme.Gold400
-import com.kunpitech.shayariwala.ui.theme.PlayfairDisplay
 import com.kunpitech.shayariwala.ui.theme.TextDisabled
 import com.kunpitech.shayariwala.ui.theme.TextMuted
 import com.kunpitech.shayariwala.ui.theme.shayariColors
+import com.kunpitech.shayariwala.utils.ShareUtils
 
 @Composable
 fun HomeScreen(
@@ -64,6 +63,7 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val ext = MaterialTheme.shayariColors
+    val context = LocalContext.current
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -134,7 +134,7 @@ fun HomeScreen(
                                             shayari  = shayari,
                                             isLiked  = shayari.id in uiState.likedIds,
                                             onLike   = { viewModel.toggleLike(shayari.id) },
-                                            onShare  = { },
+                                            onShare  = { ShareUtils.shareShayari(context, shayari) },
                                             onClick  = { onShayariClick(shayari.id) },
                                         )
 
@@ -236,6 +236,9 @@ private val chipLabels = mapOf(
     "khushi"  to "☀ Khushi",
     "judai"   to "☽ Judai",
     "wafa"    to "◈ Wafa",
+    "hosla"   to "🛡 Hosla",
+    "inspiration" to "✨ Inspiration"
+
 )
 
 @Composable

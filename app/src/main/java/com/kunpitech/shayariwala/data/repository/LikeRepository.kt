@@ -14,12 +14,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 object LikeRepository {
 
     private val db    = FirebaseFirestore.getInstance()
     private val auth  = FirebaseAuth.getInstance()
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     private val _likedIds = MutableStateFlow<Set<String>>(emptySet())
     val likedIds: StateFlow<Set<String>> = _likedIds.asStateFlow()
@@ -32,13 +33,18 @@ object LikeRepository {
     // Track the FINAL desired state per id to avoid double fire
     private val pendingState = mutableMapOf<String, Boolean>()
 
+    // Track the baseline state currently stored in Firestore
+    private val committedState = mutableMapOf<String, Boolean>()
+
     fun init() {
         scope.launch {
             try {
-                val doc = db.collection("users")
-                    .document(uid)
-                    .get()
-                    .await()
+                val doc = withContext(Dispatchers.IO) {
+                    db.collection("users")
+                        .document(uid)
+                        .get()
+                        .await()
+                }
                 @Suppress("UNCHECKED_CAST")
                 val liked = doc.get("likedIds") as? List<String> ?: emptyList()
                 _likedIds.value = liked.toSet()
@@ -51,6 +57,12 @@ object LikeRepository {
     fun toggleLike(shayariId: String) {
         val current    = _likedIds.value
         val isNowLiked = shayariId !in current
+
+        // Record baseline committed state before we change the UI state,
+        // if we don't already have a pending change.
+        if (committedState[shayariId] == null) {
+            committedState[shayariId] = !isNowLiked
+        }
 
         // 1. Update UI instantly
         _likedIds.value = if (isNowLiked) current + shayariId
@@ -69,39 +81,55 @@ object LikeRepository {
             delay(300)
 
             val finalState = pendingState[shayariId] ?: return@launch
+            val committed  = committedState[shayariId] ?: return@launch
+
+            // If the user's final decision matches the baseline state in Firestore,
+            // we don't need to write to the database.
+            if (finalState == committed) {
+                pendingJobs.remove(shayariId)
+                pendingState.remove(shayariId)
+                committedState.remove(shayariId)
+                return@launch
+            }
 
             try {
-                // ── Atomic increment — single server-side operation ──
-                db.collection("shayari")
-                    .document(shayariId)
-                    .update(
-                        "likes",
-                        FieldValue.increment(if (finalState) 1L else -1L)
-                    )
-                    .await()
+                withContext(Dispatchers.IO) {
+                    // ── Atomic increment — single server-side operation ──
+                    db.collection("shayari")
+                        .document(shayariId)
+                        .update(
+                            "likes",
+                            FieldValue.increment(if (finalState) 1L else -1L)
+                        )
+                        .await()
 
-                // ── Persist likedIds to user doc ─────────────────────
-                db.collection("users")
-                    .document(uid)
-                    .set(
-                        mapOf(
-                            "likedIds" to if (finalState)
-                                FieldValue.arrayUnion(shayariId)
-                            else
-                                FieldValue.arrayRemove(shayariId)
-                        ),
-                        SetOptions.merge(),
-                    )
-                    .await()
+                    // ── Persist likedIds to user doc ─────────────────────
+                    db.collection("users")
+                        .document(uid)
+                        .set(
+                            mapOf(
+                                "likedIds" to if (finalState)
+                                    FieldValue.arrayUnion(shayariId)
+                                else
+                                    FieldValue.arrayRemove(shayariId)
+                            ),
+                            SetOptions.merge(),
+                        )
+                        .await()
+                }
+
+                // Update committed state on success
+                committedState[shayariId] = finalState
 
             } catch (e: Exception) {
-                // Revert UI on failure
+                // Revert UI on failure to the last committed state
                 val reverted = _likedIds.value
-                _likedIds.value = if (finalState) reverted - shayariId
-                else            reverted + shayariId
+                _likedIds.value = if (committed) reverted + shayariId
+                else            reverted - shayariId
             } finally {
                 pendingJobs.remove(shayariId)
                 pendingState.remove(shayariId)
+                committedState.remove(shayariId)
             }
         }
     }
