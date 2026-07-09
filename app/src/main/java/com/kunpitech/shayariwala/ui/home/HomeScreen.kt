@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -67,6 +68,7 @@ fun HomeScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        contentWindowInsets = WindowInsets(0.dp),
     ) { innerPadding ->
 
         Column(
@@ -111,7 +113,7 @@ fun HomeScreen(
                                 start  = 16.dp,
                                 end    = 16.dp,
                                 top    = 8.dp,
-                                bottom = 100.dp,
+                                bottom = 16.dp,
                             ),
                             verticalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
@@ -237,8 +239,11 @@ private val chipLabels = mapOf(
     "judai"   to "☽ Judai",
     "wafa"    to "◈ Wafa",
     "hosla"   to "🛡 Hosla",
-    "inspiration" to "✨ Inspiration"
-
+    "inspiration" to "✨ Inspiration",
+    "dosti"   to "🤝 Dosti",
+    "tanhai"  to "👤 Tanhai",
+    "deshbhakti" to "🌍 Watan",
+    "mazahiya" to "😂 Mazahiya"
 )
 
 @Composable

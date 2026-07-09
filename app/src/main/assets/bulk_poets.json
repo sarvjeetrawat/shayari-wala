@@ -1,1 +1,80 @@
-[]
+[
+  {
+    "name": "मिर्ज़ा ग़ालिब",
+    "urduName": "مرزا غالب",
+    "bio": "Mirza Ghalib was a classical Urdu and Persian poet from India.",
+    "category": "zindagi"
+  },
+  {
+    "name": "जौन एलिया",
+    "urduName": "جون ایلیا",
+    "bio": "Jaun Elia was a Pakistani Urdu poet, biographer, and scholar.",
+    "category": "judai"
+  },
+  {
+    "name": "राहत इंदौरी",
+    "urduName": "راحت اندوری",
+    "bio": "Rahat Indori was an Indian Bollywood lyricist and Urdu language poet.",
+    "category": "hosla"
+  },
+  {
+    "name": "गुलज़ार",
+    "urduName": "گلزار",
+    "bio": "Gulzar is an Indian poet, lyricist, author, and film director.",
+    "category": "ishq"
+  },
+  {
+    "name": "बशीर बद्र",
+    "urduName": "بشیر بدر",
+    "bio": "Bashir Badr is an Indian Urdu poet known for his simple language.",
+    "category": "wafa"
+  },
+  {
+    "name": "फ़ैज़ अहमद फ़ैज़",
+    "urduName": "فیض احمد فیض",
+    "bio": "Faiz Ahmad Faiz was a Pakistani Marxist poet and author.",
+    "category": "dard"
+  },
+  {
+    "name": "वसीम बरेलवी",
+    "urduName": "وسیم بریلوی",
+    "bio": "Wasim Barelvi is an Indian Urdu poet and professor.",
+    "category": "zindagi"
+  },
+  {
+    "name": "दुष्यंत कुमार",
+    "urduName": "دشینت کمار",
+    "bio": "Dushyant Kumar was a famous Hindi poet and dramatist.",
+    "category": "hosla"
+  },
+  {
+    "name": "निदा फ़ाज़ली",
+    "urduName": "ندا فاضلی",
+    "bio": "Nida Fazli was a prominent Indian Hindi and Urdu poet.",
+    "category": "zindagi"
+  },
+  {
+    "name": "अहमद फ़राज़",
+    "urduName": "احمد فراز",
+    "bio": "Ahmad Faraz was a Pakistani Urdu poet considered one of the greatest.",
+    "category": "judai"
+  },
+  {
+    "name": "अल्लामा इक़बाल",
+    "urduName": "علامہ اقبال",
+    "bio": "Sir Muhammad Iqbal was a poet, philosopher, and politician in British India.",
+    "category": "inspiration"
+  },
+  {
+    "name": "साहिर लुधियानवी",
+    "urduName": "ساحر لدھیانوی",
+    "bio": "Sahir Ludhianvi was a popular Indian poet and film lyricist.",
+    "category": "zindagi"
+  },
+  {
+    "name": "मजरूह सुल्तानपुरी",
+    "urduName": "مجروح سلطانپوری",
+    "bio": "Majrooh Sultanpuri was an Indian Urdu poet and lyricist in Bollywood.",
+    "category": "ishq"
+  }
+]

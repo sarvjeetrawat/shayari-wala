@@ -19,5 +19,5 @@ object AdConstants {
     // const val INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-1843908357541717/5893293182"
 
     // Show interstitial every N shayari opens
-    const val INTERSTITIAL_SHOW_EVERY = 3
+    const val INTERSTITIAL_SHOW_EVERY = 2
 }

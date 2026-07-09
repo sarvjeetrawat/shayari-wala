@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -83,7 +84,10 @@ fun ExploreScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val ext = MaterialTheme.shayariColors
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.background) { innerPadding ->
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        contentWindowInsets = WindowInsets(0.dp),
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -429,7 +433,7 @@ private fun DiscoverTab(
     }
 
     LazyColumn(
-        contentPadding      = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
+        contentPadding      = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item {
@@ -556,7 +560,7 @@ private fun PoetsTab(
 
     LazyVerticalGrid(
         columns             = GridCells.Fixed(2),
-        contentPadding      = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
+        contentPadding      = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
@@ -648,7 +652,7 @@ private fun PoetShayariList(
     val dimColor    = categoryDimColor(poet.category)
 
     LazyColumn(
-        contentPadding      = PaddingValues(bottom = 100.dp),
+        contentPadding      = PaddingValues(bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         // Poet hero header
@@ -771,7 +775,7 @@ private fun PoetShayariList(
 private fun MoodsTab(onMoodClick: (String) -> Unit) {
     LazyVerticalGrid(
         columns               = GridCells.Fixed(2),
-        contentPadding        = PaddingValues(start = 16.dp, end = 16.dp, bottom = 100.dp),
+        contentPadding        = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalArrangement   = Arrangement.spacedBy(10.dp),
     ) {

@@ -12,10 +12,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -34,6 +37,7 @@ import androidx.compose.material.icons.outlined.ModeComment
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,6 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import com.kunpitech.shayariwala.utils.ShareUtils
@@ -73,6 +78,7 @@ fun SavedScreen(
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        contentWindowInsets = WindowInsets(0.dp),
     ) { innerPadding ->
 
         Column(
@@ -178,7 +184,7 @@ private fun SavedList(
             start = 16.dp,
             end = 16.dp,
             top        = 4.dp,
-            bottom     = 100.dp,
+            bottom     = 16.dp,
         ),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -220,40 +226,29 @@ private fun SavedShayariCard(
     val context = LocalContext.current
     val accentColor = categoryColor(shayari.category)
 
-    Box(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
+            .height(IntrinsicSize.Min)
             .clip(RoundedCornerShape(16.dp))
             .background(Color(0xFF111118))
             .border(0.5.dp, Color(0xFF1E1E2A), RoundedCornerShape(16.dp))
             .clickable { onClick() },
+        verticalAlignment = Alignment.CenterVertically,
     ) {
 
         // Left accent bar
         Box(
             modifier = Modifier
-                .width(3.dp)
-                .matchParentSize()
-                .background(
-                    color = accentColor,
-                    shape = RoundedCornerShape(
-                        topStart    = 16.dp,
-                        bottomStart = 16.dp,
-                        topEnd      = 0.dp,
-                        bottomEnd   = 0.dp,
-                    ),
-                )
+                .width(4.dp)
+                .fillMaxHeight()
+                .background(accentColor),
         )
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(
-                    start  = 18.dp,
-                    end    = 14.dp,
-                    top    = 14.dp,
-                    bottom = 12.dp,
-                ),
+                .padding(16.dp),
         ) {
 
             // ── Top row: category + unsave button ─────────
@@ -269,16 +264,29 @@ private fun SavedShayariCard(
                             .size(6.dp)
                             .background(accentColor, RoundedCornerShape(50))
                     )
-                    Spacer(Modifier.width(6.dp))
+                    Spacer(Modifier.width(8.dp))
                     Text(
-                        text  = shayari.category.uppercase(),
+                        text  = categoryLabel(shayari.category).uppercase(),
                         style = MaterialTheme.typography.labelMedium.copy(
                             color         = accentColor,
                             fontFamily    = DmSans,
                             fontSize      = 11.sp,
                             letterSpacing = 1.sp,
+                            fontWeight    = FontWeight.Bold,
                         ),
                     )
+                    if (shayari.isTrending) {
+                        Text(
+                            text = "  ·  TRENDING",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                color      = Gold400,
+                                fontFamily = DmSans,
+                                fontSize   = 11.sp,
+                                letterSpacing = 1.sp,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
+                    }
                 }
 
                 // Unsave button
@@ -305,24 +313,31 @@ private fun SavedShayariCard(
             // ── Shayari text ──────────────────────────────
             Text(
                 text     = shayari.hindiText,
-                style    = MaterialTheme.typography.bodyLarge,
+                style    = MaterialTheme.typography.bodyLarge.copy(
+                    color      = Color(0xFFF5E6C8),
+                    fontSize   = 18.sp,
+                    lineHeight = 30.sp,
+                ),
                 maxLines = 4,
                 overflow = TextOverflow.Ellipsis,
             )
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(10.dp))
 
             // ── Poet name ─────────────────────────────────
             Text(
                 text  = "— ${shayari.poet}",
                 style = MaterialTheme.typography.labelMedium.copy(
-                    color      = TextMuted,
+                    color      = Color(0xFFC9A96E),
                     fontFamily = DmSans,
                     fontSize   = 12.sp,
+                    fontWeight = FontWeight.Medium,
                 ),
             )
 
-            Spacer(Modifier.height(14.dp))
+            Spacer(Modifier.height(16.dp))
+            HorizontalDivider(color = Color(0xFF1E1E2A), thickness = 0.5.dp)
+            Spacer(Modifier.height(12.dp))
 
             // ── Action row ────────────────────────────────
             Row(
@@ -347,12 +362,12 @@ private fun SavedShayariCard(
                     )
                 }
 
-                Spacer(Modifier.width(14.dp))
+                Spacer(Modifier.width(16.dp))
 
                 // Comments count
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector        = androidx.compose.material.icons.Icons.Outlined.ModeComment,
+                        imageVector        = Icons.Outlined.ModeComment,
                         contentDescription = null,
                         tint               = TextDisabled,
                         modifier           = Modifier.size(13.dp),
@@ -387,13 +402,13 @@ private fun SavedShayariCard(
                         Icon(
                             imageVector        = Icons.Outlined.Share,
                             contentDescription = "Share",
-                            tint               = TextMuted,
+                            tint               = Color(0xFFC9A96E),
                             modifier           = Modifier.size(12.dp),
                         )
                         Text(
                             text  = "Share",
                             style = MaterialTheme.typography.labelMedium.copy(
-                                color      = TextMuted,
+                                color      = Color(0xFFC9A96E),
                                 fontFamily = DmSans,
                                 fontSize   = 12.sp,
                             ),
@@ -404,6 +419,7 @@ private fun SavedShayariCard(
         }
     }
 }
+
 
 // ─────────────────────────────────────────────────────────
 // Empty State

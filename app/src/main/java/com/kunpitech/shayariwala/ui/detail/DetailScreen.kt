@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -96,6 +97,7 @@ fun DetailScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         snackbarHost   = { SnackbarHost(snackbarState) },
+        contentWindowInsets = WindowInsets(0.dp),
     ) { innerPadding ->
 
         when {
@@ -139,9 +141,8 @@ fun DetailScreen(
                 LazyColumn(
                     modifier       = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
-                        .navigationBarsPadding(),
-                    contentPadding = PaddingValues(bottom = 40.dp),
+                        .padding(innerPadding),
+                    contentPadding = PaddingValues(bottom = 16.dp),
                 ) {
 
                     // ── Top bar ───────────────────────────

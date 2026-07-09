@@ -49,6 +49,10 @@ val moodCategories = listOf(
     Triple("khushi",  "☀ Khushi",  "Khushiyon ki baarish"),
     Triple("judai",   "☽ Judai",   "Bichadne ka gham"),
     Triple("wafa",    "◈ Wafa",    "Wafadaari ki kahani"),
+    Triple("dosti",   "🤝 Dosti",   "Doston ki yaari"),
+    Triple("tanhai",  "👤 Tanhai",  "Akela pan aur sukoon"),
+    Triple("deshbhakti", "🌍 Watan", "Vatan se mohabbat"),
+    Triple("mazahiya", "😂 Mazahiya", "Hansi aur mazaak"),
 )
 
 @OptIn(FlowPreview::class)

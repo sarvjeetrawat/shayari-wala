@@ -12,7 +12,7 @@
         <!-- Background color of splash -->
         <item name="windowSplashScreenBackground">@color/splash_bg</item>
         <!-- Icon shown in center -->
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_shayari</item>
         <!-- Duration of icon animation -->
         <item name="windowSplashScreenAnimationDuration">1000</item>
         <!-- Color of bottom bar during splash -->

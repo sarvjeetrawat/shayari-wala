@@ -41,6 +41,8 @@ import com.kunpitech.shayariwala.ui.splash.SplashScreen
 import com.kunpitech.shayariwala.ui.write.WriteShayariScreen
 import com.kunpitech.shayariwala.ui.theme.Gold400
 import com.kunpitech.shayariwala.ui.theme.TextDisabled
+import com.kunpitech.shayariwala.utils.ShareManager
+import com.kunpitech.shayariwala.utils.ShareDialog
 
 @Composable
 fun ShayariNavGraph(
@@ -73,9 +75,16 @@ fun ShayariNavGraph(
         },
     ) { innerPadding ->
 
+        if (ShareManager.activeShayari != null) {
+            ShareDialog(
+                context = LocalContext.current,
+                onDismiss = { ShareManager.dismiss() }
+            )
+        }
+
         NavHost(
             navController    = navController,
-            startDestination = Screen.Home.route,
+            startDestination = Screen.Splash.route,
             modifier         = Modifier.padding(innerPadding),
         ) {
 

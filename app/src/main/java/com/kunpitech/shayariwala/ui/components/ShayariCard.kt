@@ -30,10 +30,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kunpitech.shayariwala.data.model.Shayari
@@ -62,6 +65,10 @@ fun categoryColor(category: String): Color {
         "wafa"    -> ext.wafa
         "hosla"    -> ext.hosla
         "inspiration"    -> ext.inspiration
+        "dosti"    -> ext.wafa
+        "tanhai"   -> ext.judai
+        "deshbhakti" -> ext.zindagi
+        "mazahiya" -> ext.khushi
         else      -> Gold400
     }
 }
@@ -78,6 +85,10 @@ fun categoryDimColor(category: String): Color {
         "wafa"    -> ext.wafaDim
         "hosla"    -> ext.hoslaDim
         "inspiration"    -> ext.inspirationDim
+        "dosti"    -> ext.wafaDim
+        "tanhai"   -> ext.judaiDim
+        "deshbhakti" -> ext.zindagiDim
+        "mazahiya" -> ext.khushiDim
         else      -> ext.accentGoldSubtle
     }
 }
@@ -91,6 +102,10 @@ fun categoryLabel(category: String): String = when (category.lowercase()) {
     "wafa"    -> "◈ Wafa"
     "hosla"      -> "🛡 Hosla"
     "inspiration" -> "✨ Inspiration"
+    "dosti"      -> "🤝 Dosti"
+    "tanhai"     -> "👤 Tanhai"
+    "deshbhakti" -> "🌍 Watan"
+    "mazahiya"   -> "😂 Mazahiya"
     else      -> category.replaceFirstChar { it.uppercaseChar() }
 }
 
@@ -130,6 +145,7 @@ fun ShayariCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(IntrinsicSize.Min)
                 .clip(RoundedCornerShape(16.dp))
                 .background(Bg700)
                 .border(0.5.dp, Bg500, RoundedCornerShape(16.dp))
@@ -159,19 +175,28 @@ fun ShayariCard(
                             .size(6.dp)
                             .background(accentColor, RoundedCornerShape(50))
                     )
-                    Spacer(Modifier.width(6.dp))
+                    Spacer(Modifier.width(8.dp))
                     Text(
-                        text  = categoryLabel(shayari.category),
+                        text  = categoryLabel(shayari.category).uppercase(),
                         style = MaterialTheme.typography.labelMedium.copy(
                             color      = accentColor,
                             fontFamily = DmSans,
                             fontSize   = 11.sp,
                             letterSpacing = 1.sp,
+                            fontWeight = FontWeight.Bold,
                         ),
                     )
                     if (shayari.isTrending) {
-                        Spacer(Modifier.width(8.dp))
-                        TrendingBadge()
+                        Text(
+                            text = "  ·  TRENDING",
+                            style = MaterialTheme.typography.labelMedium.copy(
+                                color      = Gold400,
+                                fontFamily = DmSans,
+                                fontSize   = 11.sp,
+                                letterSpacing = 1.sp,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
                     }
                 }
 
@@ -180,7 +205,11 @@ fun ShayariCard(
                 // ── Row 2: shayari text ───────────────────────────────────
                 Text(
                     text  = shayari.hindiText,
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        color      = Color(0xFFF5E6C8),
+                        fontSize   = 18.sp,
+                        lineHeight = 30.sp,
+                    ),
                 )
 
                 Spacer(Modifier.height(10.dp))
@@ -189,13 +218,16 @@ fun ShayariCard(
                 Text(
                     text  = "— ${shayari.poet}",
                     style = MaterialTheme.typography.labelMedium.copy(
-                        color      = TextMuted,
+                        color      = Color(0xFFC9A96E),
                         fontFamily = DmSans,
                         fontSize   = 12.sp,
+                        fontWeight = FontWeight.Medium,
                     ),
                 )
 
-                Spacer(Modifier.height(14.dp))
+                Spacer(Modifier.height(16.dp))
+                HorizontalDivider(color = Bg500, thickness = 0.5.dp)
+                Spacer(Modifier.height(12.dp))
 
                 // ── Row 4: actions ────────────────────────────────────────
                 Row(
@@ -268,7 +300,7 @@ fun ShayariCard(
                         Text(
                             text  = "Share",
                             style = MaterialTheme.typography.labelMedium.copy(
-                                color      = TextMuted,
+                                color      = Color(0xFFC9A96E),
                                 fontFamily = DmSans,
                                 fontSize   = 12.sp,
                             ),

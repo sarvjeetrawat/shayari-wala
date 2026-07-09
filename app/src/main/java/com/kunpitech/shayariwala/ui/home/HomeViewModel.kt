@@ -23,7 +23,7 @@ data class HomeUiState(
     val error            : String?       = null,
 )
 
-val categories = listOf("all", "ishq", "dard", "zindagi", "khushi", "judai", "wafa", "hosla", "inspiration")
+val categories = listOf("all", "ishq", "dard", "zindagi", "khushi", "judai", "wafa", "hosla", "inspiration", "dosti", "tanhai", "deshbhakti", "mazahiya")
 
 class HomeViewModel(
     private val repo: ShayariRepository = ShayariRepository()
