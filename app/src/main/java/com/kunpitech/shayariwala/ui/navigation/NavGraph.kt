@@ -9,7 +9,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,12 +33,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kunpitech.shayariwala.ads.AdManager
+import com.kunpitech.shayariwala.ads.CollapsibleBannerAdView
 import com.kunpitech.shayariwala.ui.detail.DetailScreen
 import com.kunpitech.shayariwala.ui.explore.ExploreScreen
 import com.kunpitech.shayariwala.ui.home.HomeScreen
 import com.kunpitech.shayariwala.ui.moodfeed.MoodFeedScreen
 import com.kunpitech.shayariwala.ui.profile.ProfileScreen
 import com.kunpitech.shayariwala.ui.saved.SavedScreen
+import com.kunpitech.shayariwala.ui.settings.SettingsScreen
 import com.kunpitech.shayariwala.ui.splash.SplashScreen
 import com.kunpitech.shayariwala.ui.write.WriteShayariScreen
 import com.kunpitech.shayariwala.ui.theme.Gold400
@@ -56,21 +60,30 @@ fun ShayariNavGraph(
         containerColor = MaterialTheme.colorScheme.background,
         bottomBar = {
             if (currentRoute in bottomNavRoutes) {
-                BottomNavBar(
-                    currentDestination = currentDestination,
-                    onNavigate = { screen ->
-                        navController.navigate(screen.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    if (currentRoute == Screen.Home.route) {
+                        CollapsibleBannerAdView(
+                            modifier = Modifier.fillMaxWidth(),
+                            collapsePosition = "bottom",
+                            applyNavigationBarsPadding = false,
+                        )
+                    }
+                    BottomNavBar(
+                        currentDestination = currentDestination,
+                        onNavigate = { screen ->
+                            navController.navigate(screen.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState    = true
                             }
-                            launchSingleTop = true
-                            restoreState    = true
-                        }
-                    },
-                    onComposeClick = {
-                        navController.navigate(Screen.Write.route)
-                    },
-                )
+                        },
+                        onComposeClick = {
+                            navController.navigate(Screen.Write.route)
+                        },
+                    )
+                }
             }
         },
     ) { innerPadding ->
@@ -126,6 +139,9 @@ fun ShayariNavGraph(
                             launchSingleTop = true
                             restoreState    = true
                         }
+                    },
+                    onSettingsClick = {
+                        navController.navigate(Screen.Settings.route)
                     },
                 )
             }
@@ -271,6 +287,19 @@ fun ShayariNavGraph(
                 WriteShayariScreen(
                     onBack      = { navController.popBackStack() },
                     onSubmitted = { navController.popBackStack() },
+                )
+            }
+
+            // ── Settings ──────────────────────────────────────────
+            composable(
+                route              = Screen.Settings.route,
+                enterTransition    = { fadeIn(tween(300)) },
+                exitTransition     = { fadeOut(tween(200)) },
+                popEnterTransition = { fadeIn(tween(300)) },
+                popExitTransition  = { fadeOut(tween(200)) },
+            ) {
+                SettingsScreen(
+                    onBack = { navController.popBackStack() }
                 )
             }
         }

@@ -140,24 +140,13 @@ fun MoodFeedScreen(
                                 items = uiState.shayariList,
                                 key   = { _, s -> s.id },
                             ) { index, shayari ->
-                                val visible = remember {
-                                    MutableTransitionState(false).also { it.targetState = true }
-                                }
-                                androidx.compose.animation.AnimatedVisibility(
-                                    visibleState = visible,
-                                    enter        = fadeIn(tween(300, delayMillis = index * 50)) +
-                                            slideInVertically(
-                                                tween(400, delayMillis = index * 50)
-                                            ) { it / 3 },
-                                ) {
-                                    ShayariCard(
-                                        shayari  = shayari,
-                                        isLiked  = shayari.id in uiState.likedIds,
-                                        onLike   = { viewModel.toggleLike(shayari.id) },
-                                        onShare  = { ShareUtils.shareShayari(context, shayari) },
-                                        onClick  = { onShayariClick(shayari.id) },
-                                    )
-                                }
+                                ShayariCard(
+                                    shayari  = shayari,
+                                    isLiked  = shayari.id in uiState.likedIds,
+                                    onLike   = { viewModel.toggleLike(shayari.id) },
+                                    onShare  = { ShareUtils.shareShayari(context, shayari) },
+                                    onClick  = { onShayariClick(shayari.id) },
+                                )
                             }
                         }
                     }

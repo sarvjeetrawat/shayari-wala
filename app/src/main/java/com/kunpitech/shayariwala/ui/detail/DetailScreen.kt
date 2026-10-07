@@ -98,6 +98,15 @@ fun DetailScreen(
         containerColor = MaterialTheme.colorScheme.background,
         snackbarHost   = { SnackbarHost(snackbarState) },
         contentWindowInsets = WindowInsets(0.dp),
+        bottomBar      = {
+            if (uiState.shayari != null) {
+                BannerAdView(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding(),
+                )
+            }
+        },
     ) { innerPadding ->
 
         when {
@@ -253,16 +262,6 @@ fun DetailScreen(
                                 )
                             }
                         }
-                    }
-
-                    item {
-                        Spacer(Modifier.height(16.dp))
-                        BannerAdView(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp)
-                        )
-                        Spacer(Modifier.height(16.dp))
                     }
                 }
             }

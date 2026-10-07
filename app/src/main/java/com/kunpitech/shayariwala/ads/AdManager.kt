@@ -54,6 +54,7 @@ object AdManager {
                 Log.d(TAG, "MobileAds initialized: ${initStatus.adapterStatusMap}")
                 scope.launch(Dispatchers.Main) {
                     loadInterstitial(context.applicationContext)
+                    AppOpenManager.instance?.onAdMobInitialized()
                 }
             }
         }

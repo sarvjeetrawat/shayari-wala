@@ -26,7 +26,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -60,6 +60,7 @@ import com.kunpitech.shayariwala.utils.ShareUtils
 fun HomeScreen(
     onShayariClick : (shayariId: String) -> Unit,
     onSearchClick  : () -> Unit,
+    onSettingsClick: () -> Unit,
     viewModel      : HomeViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -78,7 +79,10 @@ fun HomeScreen(
         ) {
 
             // ── Top App Bar ───────────────────────────────
-            TopBar(onSearchClick = onSearchClick)
+            TopBar(
+                onSearchClick = onSearchClick,
+                onSettingsClick = onSettingsClick,
+            )
 
             // ── Category Chips ────────────────────────────
             CategoryChips(
@@ -120,37 +124,14 @@ fun HomeScreen(
                             itemsIndexed(
                                 items = uiState.shayariList,
                                 key   = { _, s -> s.id },
-                            ) { index, shayari ->
-                                val visible = remember {
-                                    MutableTransitionState(false).also { it.targetState = true }
-                                }
-                                androidx.compose.animation.AnimatedVisibility(
-                                    visibleState = visible,
-                                    enter        = fadeIn(tween(300, delayMillis = index * 50)) +
-                                            slideInVertically(
-                                                tween(400, delayMillis = index * 50)
-                                            ) { it / 3 },
-                                ) {
-                                    Column {
-                                        ShayariCard(
-                                            shayari  = shayari,
-                                            isLiked  = shayari.id in uiState.likedIds,
-                                            onLike   = { viewModel.toggleLike(shayari.id) },
-                                            onShare  = { ShareUtils.shareShayari(context, shayari) },
-                                            onClick  = { onShayariClick(shayari.id) },
-                                        )
-
-                                        // ── Show banner ad after every 5th card ───
-                                        if ((index + 1) % 5 == 0) {
-                                            Spacer(Modifier.height(8.dp))
-                                            BannerAdView(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .clip(RoundedCornerShape(12.dp))
-                                            )
-                                        }
-                                    }
-                                }
+                            ) { _, shayari ->
+                                ShayariCard(
+                                    shayari  = shayari,
+                                    isLiked  = shayari.id in uiState.likedIds,
+                                    onLike   = { viewModel.toggleLike(shayari.id) },
+                                    onShare  = { ShareUtils.shareShayari(context, shayari) },
+                                    onClick  = { onShayariClick(shayari.id) },
+                                )
                             }
                         }
                     }
@@ -164,7 +145,10 @@ fun HomeScreen(
 // Top Bar
 // ─────────────────────────────────────────────────────────
 @Composable
-private fun TopBar(onSearchClick: () -> Unit) {
+private fun TopBar(
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+) {
     val ext = MaterialTheme.shayariColors
 
     Row(
@@ -190,10 +174,10 @@ private fun TopBar(onSearchClick: () -> Unit) {
 
         // Action icons
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            IconButtonRound(onClick = { /* notifications */ }) {
+            IconButtonRound(onClick = onSettingsClick) {
                 Icon(
-                    imageVector        = Icons.Outlined.Notifications,
-                    contentDescription = "Notifications",
+                    imageVector        = Icons.Outlined.Settings,
+                    contentDescription = "Settings",
                     tint               = TextMuted,
                     modifier           = Modifier.size(18.dp)
                 )

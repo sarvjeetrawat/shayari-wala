@@ -15,8 +15,8 @@ android {
         applicationId = "com.kunpitech.shayariwala"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "2.2.0"
+        versionCode = 8
+        versionName = "2.3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -45,6 +45,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -62,6 +63,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.playServicesAds)
+    implementation(libs.lifecycleProcess)
 
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)

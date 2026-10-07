@@ -748,21 +748,12 @@ private fun PoetShayariList(
                 }
             }
         } else {
-            itemsIndexed(shayari, key = { _, s -> s.id }) { index, s ->
-                val visible = remember {
-                    MutableTransitionState(false).also { it.targetState = true }
-                }
-                AnimatedVisibility(
-                    visibleState = visible,
-                    enter        = fadeIn(tween(300, delayMillis = index * 40)) +
-                            slideInVertically(tween(400, delayMillis = index * 40)) { it / 3 },
-                ) {
-                    SearchResultCard(
-                        shayari = s,
-                        onClick = { onShayariClick(s.id) },
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                    )
-                }
+            items(shayari, key = { it.id }) { s ->
+                SearchResultCard(
+                    shayari = s,
+                    onClick = { onShayariClick(s.id) },
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
             }
         }
     }

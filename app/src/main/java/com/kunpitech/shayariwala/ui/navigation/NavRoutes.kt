@@ -32,6 +32,7 @@ sealed class Screen(val route: String) {
 
     // ── Write shayari ─────────────────────────────────
     data object Write    : Screen("write")
+    data object Settings : Screen("settings")
 }
 
 data class BottomNavItem(
